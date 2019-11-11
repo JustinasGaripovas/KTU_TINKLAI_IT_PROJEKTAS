@@ -50,6 +50,11 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserCard", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userCard;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -159,6 +164,23 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getUserCard(): ?UserCard
+    {
+        return $this->userCard;
+    }
+
+    public function setUserCard(UserCard $userCard): self
+    {
+        $this->userCard = $userCard;
+
+        // set the owning side of the relation if necessary
+        if ($userCard->getUser() !== $this) {
+            $userCard->setUser($this);
+        }
 
         return $this;
     }

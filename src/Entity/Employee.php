@@ -52,6 +52,11 @@ class Employee implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ExaminationComment", inversedBy="employee")
+     */
+    private $examinationComment;
+
     public function __construct()
     {
         $this->roles = array('ROLE_EMPLOYEE');
@@ -173,5 +178,17 @@ class Employee implements UserInterface
     public function eraseCredentials()
     {
         return null;
+    }
+
+    public function getExaminationComment(): ?ExaminationComment
+    {
+        return $this->examinationComment;
+    }
+
+    public function setExaminationComment(?ExaminationComment $examinationComment): self
+    {
+        $this->examinationComment = $examinationComment;
+
+        return $this;
     }
 }
