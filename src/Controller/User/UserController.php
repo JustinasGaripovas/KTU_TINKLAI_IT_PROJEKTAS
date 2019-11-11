@@ -18,7 +18,7 @@ class UserController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         return $this->render(
-            'main/index.html.twig',
+            'user/index.html.twig',
             array('controller_name'=>'nera')
         );
     }
