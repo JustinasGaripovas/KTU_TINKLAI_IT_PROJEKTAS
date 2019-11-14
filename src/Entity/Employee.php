@@ -57,6 +57,11 @@ class Employee implements UserInterface
      */
     private $examinationComment;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Scheduel", cascade={"persist", "remove"})
+     */
+    private $Schedule;
+
     public function __construct()
     {
         $this->roles = array('ROLE_EMPLOYEE');
@@ -188,6 +193,18 @@ class Employee implements UserInterface
     public function setExaminationComment(?ExaminationComment $examinationComment): self
     {
         $this->examinationComment = $examinationComment;
+
+        return $this;
+    }
+
+    public function getSchedule(): ?Scheduel
+    {
+        return $this->Schedule;
+    }
+
+    public function setSchedule(?Scheduel $Schedule): self
+    {
+        $this->Schedule = $Schedule;
 
         return $this;
     }

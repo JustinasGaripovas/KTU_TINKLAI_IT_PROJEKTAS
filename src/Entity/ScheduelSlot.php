@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ScheduelSlotRepository")
@@ -17,11 +17,13 @@ class ScheduelSlot
     private $id;
 
     /**
+     * @Assert\DateTime
      * @ORM\Column(type="datetime")
      */
     private $startTime;
 
     /**
+     * @Assert\DateTime
      * @ORM\Column(type="datetime")
      */
     private $endTime;
@@ -31,6 +33,12 @@ class ScheduelSlot
      * @ORM\JoinColumn(nullable=false)
      */
     private $scheduel;
+
+    public function __toString()
+    {
+        /** var \DateTime startTime */
+        return "{$this->startTime->format('H')} : {$this->endTime->format('H')}";
+    }
 
     public function getId(): ?int
     {

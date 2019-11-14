@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Employee;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -20,6 +21,15 @@ class EmployeeType extends AbstractType
             ->add('email', EmailType::class)
             ->add('username', TextType::class)
             ->add('phone', TextType::class)
+            ->add('roles', ChoiceType::class,[
+                'mapped' => false,
+                'multiple' => true,
+                'choices' => [
+                    'Admin' =>  'ROLE_ADMIN',
+                    'Laborant' => 'ROLE_LABORANT',
+                    'Doctor' => 'ROLE_DOCTOR'
+                ]
+            ])
             ->add('plain_password', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options'  => array('label' => 'Password'),

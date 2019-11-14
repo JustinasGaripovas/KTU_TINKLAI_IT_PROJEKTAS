@@ -4,15 +4,16 @@ namespace App\Controller\Employee;
 
 use App\Entity\Employee;
 use App\Form\EmployeeType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * Class EmployeeRegistrationController
  * @package App\Controller\Employee
+ * @isGranted("ROLE_ADMIN")
  */
 class EmployeeRegistrationController extends AbstractController
 {
@@ -29,6 +30,8 @@ class EmployeeRegistrationController extends AbstractController
 
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
+
+            $user->setRoles($request->request->get('employee')['roles']);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

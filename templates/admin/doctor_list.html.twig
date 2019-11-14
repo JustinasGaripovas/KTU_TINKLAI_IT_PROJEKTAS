@@ -58,51 +58,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
 
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
+                {% for doctor in doctorList %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>{{ doctor.getUsername }}</td>
+                    </tr>
+                {% endfor %}
 
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-
-                </tr>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
                 </tbody>
             </table>
-
-
         </div>
-
     </div>
-
 {% endblock %}
