@@ -9,19 +9,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class LaborantController
+ * @package App\Controller\Laborant
+ * @Route("employee/laborant/")
+ */
 class LaborantController extends AbstractController
 {
     /**
-     * @Route("/laborant/main", name="laborant_main")
+     * @Route("main", name="laborant_main")
      */
     public function main(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-
-        //$this->getDoctrine()->getRepository(User::class)->findOneBy([''=>''])
+        $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
 
         return $this->render(
-            'laborant/index.html.twig',
-            array('controller_name'=>'emp nera')
+            'laborant/index.html.twig'
         );
     }
 }

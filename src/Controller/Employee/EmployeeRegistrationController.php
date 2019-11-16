@@ -13,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 /**
  * Class EmployeeRegistrationController
  * @package App\Controller\Employee
- * @isGranted("ROLE_ADMIN")
  */
 class EmployeeRegistrationController extends AbstractController
 {

@@ -1,0 +1,33 @@
+<div class="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Hospital system</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {%  if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('admin_main') }}">Admin section</a>
+                    </li>
+                {% endif %}
+                {%  if is_granted('ROLE_DOCTOR') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('doctor_main') }}">Doctor section</a>
+                    </li>
+                {% endif %}
+                {%  if is_granted('ROLE_LABORANT') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('laborant_main') }}">Laborant section</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="text-muted" href="{{ path('employee_logout') }}"> Logout </a>
+            {% endif %}
+        </div>
+    </nav>
+</div>

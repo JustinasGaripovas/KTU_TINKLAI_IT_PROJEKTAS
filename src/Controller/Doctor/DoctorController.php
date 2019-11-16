@@ -8,10 +8,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class DoctorController
+ * @package App\Controller\Doctor
+ * @Route("employee/doctor/")
+ */
 class DoctorController extends AbstractController
 {
     /**
-     * @Route("/doctor/main", name="doctor_main")
+     * @Route("main", name="doctor_main")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

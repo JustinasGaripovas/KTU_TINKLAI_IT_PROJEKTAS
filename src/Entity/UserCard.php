@@ -31,6 +31,13 @@ class UserCard
      */
     private $examinations;
 
+    public function __toString()
+    {
+        $user = $this->getUser()->getUsername();
+
+        return $user;
+    }
+
     public function __construct()
     {
         $this->examinations = new ArrayCollection();

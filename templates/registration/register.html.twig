@@ -1,12 +1,14 @@
-
 {% extends 'base.html.twig' %}
 
 {# templates/registration/register.html.twig #}
 
 {% block body %}
 
-{{ form_start(form) }}
-<button type="submit">Register!</button>
-{{ form_end(form) }}
+    <div class="container pt-5">
+        <h1 class="text-center">Register employee</h1>
+
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}
