@@ -30,14 +30,14 @@ class ScheduelSlot
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Scheduel", inversedBy="timeSlots")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $scheduel;
 
     public function __toString()
     {
         /** var \DateTime startTime */
-        return "{$this->startTime->format('H')} : {$this->endTime->format('H')}";
+        return "{$this->startTime->format('H:i')} : {$this->endTime->format('H:i')}";
     }
 
     public function getId(): ?int

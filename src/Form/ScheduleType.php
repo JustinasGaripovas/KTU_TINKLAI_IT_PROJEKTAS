@@ -6,6 +6,7 @@ use App\Entity\Scheduel;
 use App\Entity\ScheduelSlot;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +21,11 @@ class ScheduleType extends AbstractType
                     'class' => ScheduelSlot::class,
                     'label' => 'Schedule slot'
                 )
-            );;
+            )
+            ->add('save', SubmitType::class, [
+                'attr' => ['class' => 'save'],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

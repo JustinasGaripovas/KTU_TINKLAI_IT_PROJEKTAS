@@ -29,34 +29,30 @@ class AdminController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        return $this->render(
-            'admin/index.html.twig',
-            array('controller_name' => 'emp nera')
-        );
-    }
+        //TODO: Should be able to add new doctor with schedule
+        //TODO: Should be able to see whole list of doctors
+        //TODO: Optional add pagination to doctor list
+        //TODO: Add schedule button on each doctor in the list
 
-    /**
-     * @Route("doctors", name="admin_doctor_list")
-     */
-    public function doctorList()
-    {
-        $allDoctors = $this->getDoctrine()->getRepository(Employee::class)->findAllByRole("ROLE_DOCTOR");
+        $doctorList = $this->getDoctrine()->getManager()->getRepository(Employee::class)->findAllByRole('ROLE_DOCTOR');
 
         return $this->render(
-            'admin/doctor_list.html.twig', [
-                'doctorList' => $allDoctors
+            'admin/index.html.twig',[
+                "doctors" => $doctorList
             ]
         );
     }
 
     /**
-     * @Route("doctors/{id}/schedule", name="admin_edit_scheduel")
+     * @Route("doctors/{id}/schedule", name="admin_edit_schedule")
      */
     public function editSchedule(Employee $employee, Request $request)
     {
         if (!$this->isGranted('ROLE_DOCTOR', $employee)) {
             throw new NotFoundHttpException("Person is not a doctor");
         }
+
+        //TODO: Add list of existing schedule
 
         $schedule = new Scheduel();
         $form = $this->createForm(ScheduleType::class, $schedule);

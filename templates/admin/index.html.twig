@@ -7,57 +7,32 @@
     <div class="container">
 
         <div class="content py-5">
-            <h1 class="text-center">Some really important employee stuff</h1>
+            <h1 class="text-center">Registered doctor list</h1>
 
+            <a href="{{ path('employee_registration') }}">New doctor</a>
+            
             <table class="table mt-4">
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
 
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
+                {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.id }}</td>
+                        <td>{{ doctor.username }}</td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.phone }}</td>
+                        <td><a class="btn" href="{{ path('admin_edit_schedule', {"id": doctor.id}) }}">+</a></td>
+                    </tr>
+                {% endfor %}
 
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-
-                </tr>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td><a class="col-5 btn btn-secondary" href="{{ path('home') }}">Add</a></td>
-                </tr>
                 </tbody>
             </table>
 
