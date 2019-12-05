@@ -21,7 +21,13 @@ class EmployeeType extends AbstractType
         $builder
             ->add('email', EmailType::class)
             ->add('username', TextType::class)
-            ->add('specialty', TextType::class)
+            ->add('specialty', ChoiceType::class,[
+                'choices' => [
+                    'Odontologas' => 'Odontologas',
+                    'Genekologas' => 'Genekologas',
+                    'Logas' => 'Logas'
+                ]
+            ])
             ->add('phone', TextType::class)
             ->add('roles', ChoiceType::class,[
                 'mapped' => false,

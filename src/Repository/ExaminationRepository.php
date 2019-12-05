@@ -33,6 +33,7 @@ class ExaminationRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
+            return null;
         }
 
 

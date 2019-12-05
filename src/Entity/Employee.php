@@ -50,14 +50,10 @@ class Employee implements UserInterface
     private $encoded_password;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="array")
      */
     private $roles = [];
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\ExaminationComment", inversedBy="employee")
-     */
-    private $examinationComment;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Scheduel", cascade={"persist", "remove"})
@@ -70,6 +66,7 @@ class Employee implements UserInterface
     private $examination;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $specialty;
@@ -196,18 +193,6 @@ class Employee implements UserInterface
     public function eraseCredentials()
     {
         return null;
-    }
-
-    public function getExaminationComment(): ?ExaminationComment
-    {
-        return $this->examinationComment;
-    }
-
-    public function setExaminationComment(?ExaminationComment $examinationComment): self
-    {
-        $this->examinationComment = $examinationComment;
-
-        return $this;
     }
 
     public function getSchedule(): ?Scheduel

@@ -137,6 +137,12 @@ class VisitationController extends AbstractController
             $hour = $request->request->get('hours');
             $date = $request->request->get('date');
 
+            if ($examinationRepository->findIfIsNotTaken(new \DateTime($date), $hour) !== true )
+            {
+                $this->addFlash('success', 'Date is already taken');
+                return $this->redirectToRoute('register_examination', ['id'=>$employee->getId()]);
+            }
+
             $examination->setDate(new \DateTime($date));
             $examination->setHours($hour);
 

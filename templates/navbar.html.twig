@@ -1,13 +1,14 @@
 <div class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Hospital system</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                {%  if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('admin_main') }}">Admin section</a>
                     </li>
@@ -15,17 +16,17 @@
                         <a class="nav-link" href="{{ path('doctor_main') }}">Doctor section</a>
                     </li>
                 {% endif %}
-                {%  if is_granted('ROLE_DOCTOR') %}
+                {% if is_granted('ROLE_DOCTOR') %}
                     <li>
                         <a class="nav-link" href="{{ path('doctor_pacient_main') }}">Doctor patients</a>
                     </li>
                 {% endif %}
-                {%  if is_granted('ROLE_LABORANT') %}
+                {% if is_granted('ROLE_LABORANT') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('laborant_main') }}">Laborant section</a>
                     </li>
                 {% endif %}
-                {%  if is_granted('ROLE_USER') and is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if is_granted('ROLE_USER') and is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('doctor_visitation_main') }}">Doctor list</a>
                     </li>
@@ -33,10 +34,24 @@
                         <a class="nav-link" href="{{ path('user_examinations') }}">Examination list</a>
                     </li>
                 {% endif %}
-
-
-
             </ul>
+
+            <div class="m-2">
+                {% if is_granted('ROLE_DOCTOR') %}
+                    Doctor,
+                {% endif %}
+                {% if is_granted('ROLE_LABORANT') %}
+                    Laborant,
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    Admin,
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
+                    User,
+                {% endif %}
+                {{ app.user.username }}
+
+            </div>
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <a class="text-muted" href="{{ path('employee_logout') }}"> Logout </a>

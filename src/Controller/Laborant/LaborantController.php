@@ -34,7 +34,7 @@ class LaborantController extends AbstractController
             throw new NotFoundHttpException("You are not a doctor");
         }
 
-        $userList = $examinationRepository->findAllVisitsForDoctor($user->getId());
+        $userList = $examinationRepository->findAll();
 
         return $this->render(
             'laborant/index.html.twig', [

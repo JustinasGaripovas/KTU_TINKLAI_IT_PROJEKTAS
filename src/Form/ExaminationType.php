@@ -7,6 +7,7 @@ use App\Entity\Examination;
 use App\Entity\ScheduelDay;
 use App\Entity\ScheduelSlot;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,7 +28,13 @@ class ExaminationType extends AbstractType
 
         if ($this->security->isGranted('ROLE_LABORANT')) {
             $query
-                ->add('name')
+                ->add('name', ChoiceType::class,[
+                    'choices' => [
+                        'Kraujo tyrimas' => 'Kraujo tyrimas',
+                        'Kitas tyrimas' => 'Kitas tyrimas',
+                        'Penktas tyrimas' => 'Penktas tyrimas',
+                    ]
+                ])
                 ->add('result');
         }
 
@@ -35,6 +42,19 @@ class ExaminationType extends AbstractType
             $query
                 ->add('comment');
         }
+
+       if ($this->security->isGranted('ROLE_USER')) {
+            $query
+                ->add('name', ChoiceType::class,[
+                    'choices' => [
+                        'Kraujo tyrimas' => 'Kraujo tyrimas',
+                        'Kitas tyrimas' => 'Kitas tyrimas',
+                        'Penktas tyrimas' => 'Penktas tyrimas',
+                    ]
+                ]);
+        }
+
+
 
         $query
             ->add('save', SubmitType::class, [
