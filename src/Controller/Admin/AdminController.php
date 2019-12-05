@@ -4,9 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\Employee;
 use App\Entity\Scheduel;
+use App\Entity\ScheduelDay;
+use App\Form\ScheduleDayType;
 use App\Form\ScheduleType;
 use App\Form\UserType;
 use App\Entity\User;
+use App\Managers\EmployeeManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,51 +27,136 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AdminController extends AbstractController
 {
+    private $employeeManager;
+
+    public function __construct(EmployeeManager $employeeManager)
+    {
+        $this->employeeManager = $employeeManager;
+    }
+
     /**
      * @Route("main", name="admin_main")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        //TODO: Should be able to add new doctor with schedule
-        //TODO: Should be able to see whole list of doctors
-        //TODO: Optional add pagination to doctor list
-        //TODO: Add schedule button on each doctor in the list
-
-        $doctorList = $this->getDoctrine()->getManager()->getRepository(Employee::class)->findAllByRole('ROLE_DOCTOR');
+        $adminList = $this->employeeManager->findByRole($this->employeeManager::ROLE_ADMIN);
 
         return $this->render(
             'admin/index.html.twig',[
-                "doctors" => $doctorList
+                "admins" => $adminList
             ]
         );
     }
 
+
     /**
-     * @Route("doctors/{id}/schedule", name="admin_edit_schedule")
+     * @Route("doctors/{id}/schedule/create", name="admin_schedule_create")
      */
-    public function editSchedule(Employee $employee, Request $request)
+    public function scheduleCreate(Employee $employee, Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if ($employee->getSchedule() === null)
+        {
+            $schedule = new Scheduel();
+
+            $employee->setSchedule($schedule);
+
+            $entityManager->persist($schedule);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_edit_schedule_day',array('id'=>$employee->getId()));
+    }
+
+    /**
+     * @Route("doctors/{id}/schedule", name="admin_schedule")
+     */
+    public function scheduleIndex(Employee $employee, Request $request)
     {
         if (!$this->isGranted('ROLE_DOCTOR', $employee)) {
             throw new NotFoundHttpException("Person is not a doctor");
         }
 
-        //TODO: Add list of existing schedule
+        $days = [
+            1 => 'Monday',
+            2 => 'Tuesday',
+            3 => 'Thursday',
+            4 => 'Wednesday',
+            5 => 'Friday',
+            6 => 'Saturday',
+            7 => 'Sunday',
+        ];
 
-        $schedule = new Scheduel();
-        $form = $this->createForm(ScheduleType::class, $schedule);
+        return $this->render(
+            'admin/shedule_index.html.twig', [
+                'schedule' => $employee->getSchedule(),
+                'employee' => $employee,
+                'days' => $days
+            ]
+        );
+    }
+
+    /**
+     * @Route("doctors/{id}/schedule/{day}/day", name="admin_delete_schedule_day")
+     */
+    public function deleteSchedule(Employee $employee, $day)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $scheduleDay = $entityManager->getRepository(ScheduelDay::class)->find($day);
+        $employee->getSchedule()->removeScheduleDay($scheduleDay);
+
+        $entityManager->remove($scheduleDay);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('admin_schedule', ['id'=>$employee->getId()]);
+    }
+
+    /**
+     * @Route("doctors/{id}/schedule/day", name="admin_edit_schedule_day")
+     */
+    public function editSchedule(Request $request,Employee $employee)
+    {
+        $scheduleDay = new ScheduelDay();
+        $form = $this->createForm(ScheduleDayType::class, $scheduleDay);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($this->checkIfDayIsAlreadyInScheduel($employee->getSchedule(), $scheduleDay->getDay()))
+            {
+                throw new NotFoundHttpException("That day is use");
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($schedule);
+            $employee->getSchedule()->addScheduleDay($scheduleDay);
             $entityManager->flush();
-            return $this->redirectToRoute('admin_main');
+
+            return $this->redirectToRoute('admin_schedule',['id'=>$employee->getId()]);
         }
 
         return $this->render(
             'registration/register.html.twig',
             array('form' => $form->createView())
         );
+    }
+
+    /**
+     * @param Scheduel $schedule
+     * @param int $day
+     * @return bool
+     */
+    private function checkIfDayIsAlreadyInScheduel(Scheduel $schedule, int $day)
+    {
+        /** @var ScheduelDay $scheduleDay */
+        foreach ($schedule->getScheduleDays() as $scheduleDay)
+        {
+            if ($scheduleDay->getDay() === $day)
+                return true;
+        }
+
+        return false;
     }
 }

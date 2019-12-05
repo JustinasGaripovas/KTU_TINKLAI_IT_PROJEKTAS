@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <div class="content py-5">
+            <h1 class="text-center">Employee schedule</h1>
+
+            <a href="{{ path('admin_schedule_create', {id: employee.id}) }}">New schedule entity</a>
+
+            {% if schedule != null and schedule.scheduleDays != null %}
+                <table class="table mt-4">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Day</th>
+                        <th>Slots</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for day in schedule.scheduleDays %}
+                        <tr>
+                            <td>{{ days[day.day] }}</td>
+                            <td>
+                                {% for slots in day.slots %}
+
+                                    {{ slots.startTime|date('H:i')|default('none') }} - {{ slots.endTime|date('H:i')|default('none') }} <br>
+
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" href="{{ path('admin_delete_schedule_day', {id: employee.id, day: day.id}) }}">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="container p-5 m-5">
+                    <h4 class="text-center">Schedule is empty</h4>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

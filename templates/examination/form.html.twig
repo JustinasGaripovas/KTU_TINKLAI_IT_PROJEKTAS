@@ -2,13 +2,103 @@
 
 {% block title %}Hello MainController!{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if is_granted('ROLE_USER') %}
+
+    <script>
+
+        let allowedDates = [];
+        let allowedHours = [];
+
+
+        $(document).ready(function () {
+
+            var dateToday = new Date();
+
+            allowedDates = {{ allowedDays|json_encode|raw }};
+            allowedHours = {{ allowedHours|json_encode|raw }};
+
+            console.log(allowedDates);
+            console.log(allowedHours);
+
+            $(".datepicker").datepicker({beforeShowDay: disableDay,
+                minDate: dateToday,
+                onSelect: function(dateText) {
+                    var date = $(this).datepicker('getDate');
+                    var dayOfWeek = date.getDay();
+                    setHours(dayOfWeek);
+                }
+            })
+        });
+
+        function disableDay(day) {
+            var day = day.getDay();
+
+            for (let i=0; i <= allowedDates.length ; i++)
+            {
+                if (day == allowedDates[i]) {
+                    return [true, "datepicker"]
+                }
+            }
+
+            return [false, "datepicker"]
+        }
+
+        function setHours(day) {
+
+            $('#hour-select').empty();
+
+            console.log(day);
+
+            //TODO: isvalo,
+
+            console.log(day);
+            console.log(allowedDates);
+
+            for (let i = 0; i <= allowedHours[day].length;i++)
+            {
+                setSlot(allowedHours[day][i-1]);
+            }
+
+        }
+
+        function setSlot(hourText) {
+            var o = new Option(hourText, hourText);
+            $("#hour-select").append(o);
+        }
+    </script>
+
+    {% endif %}
+
+{% endblock %}
+
 {% block body %}
 
 
     <div class="container">
 
-    <h1>Register new examination</h1>
-        {{ form(form) }}
+        <h1>Register new examination</h1>
+
+        {{ form_start(form) }}
+
+        {% if is_granted('ROLE_USER') %}
+
+        <p>Insert date</p>
+        <input name="date" class="datepicker" type="text">
+
+        <p>Insert time</p>
+        <select name="hours" id="hour-select">
+        </select>
+
+        {% endif %}
+
+        {{ form_widget(form) }}
+
+
+        {{ form_end(form) }}
+
     </div>
 
 

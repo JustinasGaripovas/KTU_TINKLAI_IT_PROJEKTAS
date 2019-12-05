@@ -19,20 +19,7 @@ class EmployeeRepository extends ServiceEntityRepository
         parent::__construct($registry, Employee::class);
     }
 
-    /**
-     * @param $role
-     * @return mixed
-     */
-    public function findAllByRole($role)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.roles LIKE :roles')
-            ->setParameter('roles', '%"' . $role . '"%')
-            ->orderBy('e.id', 'ASC')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
+
     
     // /**
     //  * @return Employee[] Returns an array of Employee objects

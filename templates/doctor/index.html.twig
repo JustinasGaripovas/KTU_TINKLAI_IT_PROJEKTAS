@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Doctor list{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <div class="content py-5">
+            <h1 class="text-center">Doctor list</h1>
+
+            <table class="table mt-4">
+                <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.id }}</td>
+                        <td>{{ doctor.username }}</td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.phone }}</td>
+
+                        {% if is_granted('ROLE_USER') %}
+                            <td><a class="btn" href="{{ path('register_examination', {"id": doctor.id}) }}">Register visitation</a></td>
+                        {% elseif is_granted('ROLE_ADMIN') %}
+                            <td><a class="btn" href="{{ path('admin_schedule', {"id": doctor.id}) }}">Add schedule</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}

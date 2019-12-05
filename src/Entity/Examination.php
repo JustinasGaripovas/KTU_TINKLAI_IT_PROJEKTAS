@@ -27,25 +27,39 @@ class Examination
     private $date;
 
     /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $result;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\UserCard", inversedBy="examinations")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="examination")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userCard;
+    private $employee;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ExaminationComment", mappedBy="examination")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="examinations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $hours;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $comment;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
     public function __construct()
     {
-        $this->comment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,45 +91,62 @@ class Examination
         return $this;
     }
 
-    public function getUserCard(): ?UserCard
+    public function getEmployee(): ?Employee
     {
-        return $this->userCard;
+        return $this->employee;
     }
 
-    public function setUserCard(?UserCard $userCard): self
+    public function setEmployee(?Employee $employee): self
     {
-        $this->userCard = $userCard;
+        $this->employee = $employee;
 
         return $this;
     }
 
-    /**
-     * @return Collection|ExaminationComment[]
-     */
-    public function getComment(): Collection
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getHours(): ?string
+    {
+        return $this->hours;
+    }
+
+    public function setHours(string $hours): self
+    {
+        $this->hours = $hours;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    public function addComment(ExaminationComment $comment): self
+    public function setComment(?string $comment): self
     {
-        if (!$this->comment->contains($comment)) {
-            $this->comment[] = $comment;
-            $comment->setExamination($this);
-        }
+        $this->comment = $comment;
 
         return $this;
     }
 
-    public function removeComment(ExaminationComment $comment): self
+    public function getName(): ?string
     {
-        if ($this->comment->contains($comment)) {
-            $this->comment->removeElement($comment);
-            // set the owning side to null (unless already changed)
-            if ($comment->getExamination() === $this) {
-                $comment->setExamination(null);
-            }
-        }
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

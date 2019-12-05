@@ -2,23 +2,46 @@
 
 namespace App\Form;
 
+use App\Entity\Employee;
 use App\Entity\Examination;
+use App\Entity\ScheduelDay;
+use App\Entity\ScheduelSlot;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class ExaminationType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('date')
-            ->add('result')
-            ->add('userCard')
+        $query = $builder;
+
+        if ($this->security->isGranted('ROLE_LABORANT')) {
+            $query
+                ->add('name')
+                ->add('result');
+        }
+
+       if ($this->security->isGranted('ROLE_DOCTOR')) {
+            $query
+                ->add('comment');
+        }
+
+        $query
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'save'],
+                'attr' => ['class' => ' mt-2 save btn btn-success ',],
             ]);
+
+        return $query;
     }
 
     public function configureOptions(OptionsResolver $resolver)

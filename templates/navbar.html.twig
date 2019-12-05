@@ -11,10 +11,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('admin_main') }}">Admin section</a>
                     </li>
-                {% endif %}
-                {%  if is_granted('ROLE_DOCTOR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('doctor_main') }}">Doctor section</a>
+                    </li>
+                {% endif %}
+                {%  if is_granted('ROLE_DOCTOR') %}
+                    <li>
+                        <a class="nav-link" href="{{ path('doctor_pacient_main') }}">Doctor patients</a>
                     </li>
                 {% endif %}
                 {%  if is_granted('ROLE_LABORANT') %}
@@ -22,6 +25,16 @@
                         <a class="nav-link" href="{{ path('laborant_main') }}">Laborant section</a>
                     </li>
                 {% endif %}
+                {%  if is_granted('ROLE_USER') and is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('doctor_visitation_main') }}">Doctor list</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_examinations') }}">Examination list</a>
+                    </li>
+                {% endif %}
+
+
 
             </ul>
 

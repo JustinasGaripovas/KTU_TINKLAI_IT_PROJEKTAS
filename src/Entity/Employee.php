@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -62,9 +64,20 @@ class Employee implements UserInterface
      */
     private $Schedule;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Examination", mappedBy="employee")
+     */
+    private $examination;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $specialty;
+
     public function __construct()
     {
         $this->roles = array('ROLE_EMPLOYEE');
+        $this->examination = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,6 +218,49 @@ class Employee implements UserInterface
     public function setSchedule(?Scheduel $Schedule): self
     {
         $this->Schedule = $Schedule;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Examination[]
+     */
+    public function getExamination(): Collection
+    {
+        return $this->examination;
+    }
+
+    public function addExamination(Examination $examination): self
+    {
+        if (!$this->examination->contains($examination)) {
+            $this->examination[] = $examination;
+            $examination->setEmployee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExamination(Examination $examination): self
+    {
+        if ($this->examination->contains($examination)) {
+            $this->examination->removeElement($examination);
+            // set the owning side to null (unless already changed)
+            if ($examination->getEmployee() === $this) {
+                $examination->setEmployee(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSpecialty(): ?string
+    {
+        return $this->specialty;
+    }
+
+    public function setSpecialty(?string $specialty): self
+    {
+        $this->specialty = $specialty;
 
         return $this;
     }

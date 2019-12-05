@@ -1,6 +1,8 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,21 +20,27 @@ class ScheduelSlot
 
     /**
      * @Assert\DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="time")
      */
     private $startTime;
 
     /**
      * @Assert\DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="time")
      */
     private $endTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Scheduel", inversedBy="timeSlots")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\ScheduelDay", mappedBy="slots")
      */
-    private $scheduel;
+    private $scheduelDays;
+
+    public function __construct()
+    {
+        $this->scheduels = new ArrayCollection();
+        $this->scheduelDays = new ArrayCollection();
+    }
+
 
     public function __toString()
     {
@@ -45,39 +53,56 @@ class ScheduelSlot
         return $this->id;
     }
 
-    public function getStartTime(): ?\DateTimeInterface
+    public function getStartTime()
     {
         return $this->startTime;
     }
 
-    public function setStartTime(\DateTimeInterface $startTime): self
+    public function setStartTime($startTime): self
     {
         $this->startTime = $startTime;
 
         return $this;
     }
 
-    public function getEndTime(): ?\DateTimeInterface
+    public function getEndTime()
     {
         return $this->endTime;
     }
 
-    public function setEndTime(\DateTimeInterface $endTime): self
+    public function setEndTime($endTime): self
     {
         $this->endTime = $endTime;
 
         return $this;
     }
 
-    public function getScheduel(): ?Scheduel
+    /**
+     * @return Collection|ScheduelDay[]
+     */
+    public function getScheduelDays(): Collection
     {
-        return $this->scheduel;
+        return $this->scheduelDays;
     }
 
-    public function setScheduel(?Scheduel $scheduel): self
+    public function addScheduelDay(ScheduelDay $scheduelDay): self
     {
-        $this->scheduel = $scheduel;
+        if (!$this->scheduelDays->contains($scheduelDay)) {
+            $this->scheduelDays[] = $scheduelDay;
+            $scheduelDay->addSlot($this);
+        }
 
         return $this;
     }
+
+    public function removeScheduelDay(ScheduelDay $scheduelDay): self
+    {
+        if ($this->scheduelDays->contains($scheduelDay)) {
+            $this->scheduelDays->removeElement($scheduelDay);
+            $scheduelDay->removeSlot($this);
+        }
+
+        return $this;
+    }
+
 }

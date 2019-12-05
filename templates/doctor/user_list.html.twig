@@ -13,11 +13,13 @@
                 <thead class="thead-dark">
                 <tr>
                     <th>#</th>
-                    <th>Employee username</th>
-                    <th>Client</th>
+                    <th>Doctor username</th>
+                    <th>Client name</th>
                     <th>Date</th>
                     <th>Hour</th>
+                    <th>Examination type</th>
                     <th>Result</th>
+                    <th>Comment</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -30,12 +32,17 @@
                         <td>{{ examination.user.username }}</td>
                         <td>{{ examination.date|date('Y:m:d') }}</td>
                         <td>{{ examination.hours }}</td>
-                        <td>{{ examination.result }}</td>
+                        <td>{{ examination.name|default('None') }}</td>
+                        <td>{{ examination.result|default('Empty') }}</td>
+                        <td>{{ examination.comment|default('Empty') }}</td>
 
-                        {% if is_granted('ROLE_LABORANT') %}
-                            <td><a href="{{ path('edit_examination', {id: examination.id}) }}">Add result</a></td>
+
+                        {% if is_granted('ROLE_DOCTOR') %}
+                            <td><a href="{{ path('edit_examination', {id: examination.id}) }}">Add comment</a></td>
                         {% endif %}
-
+                        {% if is_granted('ROLE_USER') %}
+                            <td><a href="{{ path('delete_examination', {id: examination.id}) }}">Cancel</a></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
 

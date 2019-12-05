@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Examination;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method Examination|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,22 +20,25 @@ class ExaminationRepository extends ServiceEntityRepository
         parent::__construct($registry, Examination::class);
     }
 
-    // /**
-    //  * @return Examination[] Returns an array of Examination objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findIfIsNotTaken($date, $hour): bool
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $result = null;
+
+        try {
+            $result = $this->createQueryBuilder('e')
+                ->andWhere('e.date = :date')
+                ->setParameter('date', $date)
+                ->andWhere('e.hours = :hour')
+                ->setParameter('hour', $hour)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+
+        return $result == null;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Examination
@@ -47,4 +51,23 @@ class ExaminationRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAllVisitsForDoctor($value)
+    {
+        return $this->createQueryBuilder('e')
+            ->setParameter('val', $value)
+            ->innerJoin('e.employee', 'employee')
+            ->andWhere('employee.id = :val')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllVisitsForUser($value)
+    {
+        return $this->createQueryBuilder('e')
+            ->setParameter('val', $value)
+            ->innerJoin('e.user', 'user')
+            ->andWhere('user.id = :val')
+            ->getQuery()
+            ->getResult();
+    }
 }

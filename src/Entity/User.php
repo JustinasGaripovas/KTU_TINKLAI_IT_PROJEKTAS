@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -51,13 +53,14 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserCard", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Examination", mappedBy="user")
      */
-    private $userCard;
+    private $examinations;
 
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
+        $this->examinations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -168,18 +171,32 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getUserCard(): ?UserCard
+    /**
+     * @return Collection|Examination[]
+     */
+    public function getExaminations(): Collection
     {
-        return $this->userCard;
+        return $this->examinations;
     }
 
-    public function setUserCard(UserCard $userCard): self
+    public function addExamination(Examination $examination): self
     {
-        $this->userCard = $userCard;
+        if (!$this->examinations->contains($examination)) {
+            $this->examinations[] = $examination;
+            $examination->setUser($this);
+        }
 
-        // set the owning side of the relation if necessary
-        if ($userCard->getUser() !== $this) {
-            $userCard->setUser($this);
+        return $this;
+    }
+
+    public function removeExamination(Examination $examination): self
+    {
+        if ($this->examinations->contains($examination)) {
+            $this->examinations->removeElement($examination);
+            // set the owning side to null (unless already changed)
+            if ($examination->getUser() === $this) {
+                $examination->setUser(null);
+            }
         }
 
         return $this;

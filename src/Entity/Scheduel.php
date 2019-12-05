@@ -20,19 +20,14 @@ class Scheduel
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @ORM\ManyToMany(targetEntity="App\Entity\ScheduelDay", inversedBy="scheduels", cascade={"persist"})
      */
-    private $day;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ScheduelSlot", mappedBy="scheduel")
-     */
-    private $timeSlots;
+    private $ScheduleDays;
 
     public function __construct()
     {
-        $this->timeSlots = new ArrayCollection();
+        $this->slots = new ArrayCollection();
+        $this->ScheduleDays = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,33 +48,29 @@ class Scheduel
     }
 
     /**
-     * @return Collection|ScheduelSlot[]
+     * @return Collection|ScheduelDay[]
      */
-    public function getTimeSlots(): Collection
+    public function getScheduleDays(): Collection
     {
-        return $this->timeSlots;
+        return $this->ScheduleDays;
     }
 
-    public function addTimeSlot(ScheduelSlot $timeSlot): self
+    public function addScheduleDay(ScheduelDay $scheduleDay): self
     {
-        if (!$this->timeSlots->contains($timeSlot)) {
-            $this->timeSlots[] = $timeSlot;
-            $timeSlot->setScheduel($this);
+        if (!$this->ScheduleDays->contains($scheduleDay)) {
+            $this->ScheduleDays[] = $scheduleDay;
         }
 
         return $this;
     }
 
-    public function removeTimeSlot(ScheduelSlot $timeSlot): self
+    public function removeScheduleDay(ScheduelDay $scheduleDay): self
     {
-        if ($this->timeSlots->contains($timeSlot)) {
-            $this->timeSlots->removeElement($timeSlot);
-            // set the owning side to null (unless already changed)
-            if ($timeSlot->getScheduel() === $this) {
-                $timeSlot->setScheduel(null);
-            }
+        if ($this->ScheduleDays->contains($scheduleDay)) {
+            $this->ScheduleDays->removeElement($scheduleDay);
         }
 
         return $this;
     }
+
 }

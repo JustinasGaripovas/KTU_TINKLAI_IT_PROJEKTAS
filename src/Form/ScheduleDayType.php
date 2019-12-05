@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Scheduel;
+use App\Entity\ScheduelDay;
 use App\Entity\ScheduelSlot;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -11,12 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ScheduleType extends AbstractType
+class ScheduleDayType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('day', ChoiceType::class, [
+            ->add('Day', ChoiceType::class, [
                 'choices' => [
                     'Monday' => 1,
                     'Tuesday' => 2,
@@ -42,7 +42,7 @@ class ScheduleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Scheduel::class,
+            'data_class' => ScheduelDay::class,
         ]);
     }
 }
